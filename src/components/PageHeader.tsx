@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import FadeInUp from "./animations/FadeInUp";
 
 interface PageHeaderProps {
   title: string;
@@ -56,36 +56,27 @@ export default function PageHeader({
 
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-3xl md:text-5xl font-bold text-white mb-3"
-        >
-          {title}
-        </motion.h1>
+        <FadeInUp delay={100}>
+          <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">
+            {title}
+          </h1>
+        </FadeInUp>
         {subtitle && (
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-base md:text-lg text-white/80"
-          >
-            {subtitle}
-          </motion.p>
+          <FadeInUp delay={200}>
+            <p className="text-base md:text-lg text-white/80">
+              {subtitle}
+            </p>
+          </FadeInUp>
         )}
         {badge && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-4"
-          >
-            <span className="inline-flex items-center gap-2 bg-accent text-white text-sm font-semibold px-4 py-2 rounded-full">
-              <span className="text-white/80">{badge.label}</span>
-              <span>{badge.value}</span>
-            </span>
-          </motion.div>
+          <FadeInUp delay={300}>
+            <div className="mt-4">
+              <span className="inline-flex items-center gap-2 bg-accent text-white text-sm font-semibold px-4 py-2 rounded-full">
+                <span className="text-white/80">{badge.label}</span>
+                <span>{badge.value}</span>
+              </span>
+            </div>
+          </FadeInUp>
         )}
       </div>
     </section>

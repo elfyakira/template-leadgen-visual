@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { motion } from "framer-motion";
+import { useState, useCallback, useEffect, useRef } from "react";
+import FadeInUp from "./animations/FadeInUp";
 
 interface Region {
   name: string;
@@ -68,6 +68,26 @@ export default function AreaMap({
   );
   const [hoveredArea, setHoveredArea] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [isVisible, setIsVisible] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (mapRef.current) {
+      observer.observe(mapRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<SVGElement>, areaName: string) => {
@@ -112,134 +132,129 @@ export default function AreaMap({
   );
 
   return (
-    <div className={`relative w-full max-w-xl mx-auto ${className}`}>
-      <svg
-        viewBox="0 0 400 340"
-        className="w-full h-auto"
-        style={{ maxHeight: "400px" }}
-      >
-        {/* 背景 */}
-        <rect x="0" y="0" width="400" height="340" fill="#f8f9fa" rx="8" />
+    <FadeInUp>
+      <div ref={mapRef} className={`relative w-full max-w-xl mx-auto ${className}`}>
+        <svg
+          viewBox="0 0 400 340"
+          className="w-full h-auto"
+          style={{ maxHeight: "400px" }}
+        >
+          {/* 背景 */}
+          <rect x="0" y="0" width="400" height="340" fill="#f8f9fa" rx="8" />
 
-        {/* 各エリアのパス */}
-        {Object.entries(areaPaths).map(([areaName, path]) => {
-          const region = getRegionInfo(areaName);
-          const isClickable = !!region;
+          {/* 各エリアのパス */}
+          {Object.entries(areaPaths).map(([areaName, path]) => {
+            const region = getRegionInfo(areaName);
+            const isClickable = !!region;
 
-          return (
-            <motion.path
-              key={areaName}
-              d={path}
-              fill={getAreaColor(areaName)}
-              stroke="#ffffff"
-              strokeWidth="2"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              style={{
-                cursor: isClickable ? "pointer" : "default",
-                transition: "fill 0.2s ease",
-              }}
-              onMouseMove={(e) => isClickable && handleMouseMove(e, areaName)}
-              onMouseLeave={() => setHoveredArea(null)}
-              onClick={() => isClickable && handleAreaClick(areaName)}
-            />
-          );
-        })}
+            return (
+              <path
+                key={areaName}
+                d={path}
+                fill={getAreaColor(areaName)}
+                stroke="#ffffff"
+                strokeWidth="2"
+                className={`transition-all duration-300 ${isVisible ? "opacity-100" : "opacity-0"}`}
+                style={{
+                  cursor: isClickable ? "pointer" : "default",
+                  transitionDelay: "100ms",
+                }}
+                onMouseMove={(e) => isClickable && handleMouseMove(e, areaName)}
+                onMouseLeave={() => setHoveredArea(null)}
+                onClick={() => isClickable && handleAreaClick(areaName)}
+              />
+            );
+          })}
 
-        {/* エリアラベル */}
-        {Object.entries(areaLabelPositions).map(([areaName, pos]) => {
-          const region = getRegionInfo(areaName);
-          if (!region) return null;
+          {/* エリアラベル */}
+          {Object.entries(areaLabelPositions).map(([areaName, pos]) => {
+            const region = getRegionInfo(areaName);
+            if (!region) return null;
 
-          return (
-            <motion.g
-              key={`label-${areaName}`}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.3 }}
-            >
-              <text
-                x={pos.x}
-                y={pos.y}
-                textAnchor="middle"
-                fill="#ffffff"
-                fontSize={region.isMain ? "14" : "11"}
-                fontWeight={region.isMain ? "700" : "600"}
-                style={{ pointerEvents: "none" }}
+            return (
+              <g
+                key={`label-${areaName}`}
+                className={`transition-all duration-300 ${isVisible ? "opacity-100" : "opacity-0"}`}
+                style={{ transitionDelay: "300ms" }}
               >
-                {areaName}
-              </text>
-              {region.isMain && (
                 <text
                   x={pos.x}
-                  y={pos.y + 16}
+                  y={pos.y}
                   textAnchor="middle"
-                  fill="rgba(255,255,255,0.8)"
-                  fontSize="9"
+                  fill="#ffffff"
+                  fontSize={region.isMain ? "14" : "11"}
+                  fontWeight={region.isMain ? "700" : "600"}
                   style={{ pointerEvents: "none" }}
                 >
-                  (メインエリア)
+                  {areaName}
                 </text>
-              )}
-            </motion.g>
-          );
-        })}
+                {region.isMain && (
+                  <text
+                    x={pos.x}
+                    y={pos.y + 16}
+                    textAnchor="middle"
+                    fill="rgba(255,255,255,0.8)"
+                    fontSize="9"
+                    style={{ pointerEvents: "none" }}
+                  >
+                    (メインエリア)
+                  </text>
+                )}
+              </g>
+            );
+          })}
 
-        {/* 本社マーカー */}
-        <motion.g
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.5, type: "spring" }}
-        >
-          <circle cx="220" cy="160" r="8" fill="#f39c12" stroke="#fff" strokeWidth="2" />
-          <circle cx="220" cy="160" r="3" fill="#fff" />
-        </motion.g>
+          {/* 本社マーカー */}
+          <g
+            className={`transition-all duration-500 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
+            style={{ transitionDelay: "500ms", transformOrigin: "220px 160px" }}
+          >
+            <circle cx="220" cy="160" r="8" fill="#f39c12" stroke="#fff" strokeWidth="2" />
+            <circle cx="220" cy="160" r="3" fill="#fff" />
+          </g>
 
-        {/* 凡例 */}
-        <g transform="translate(20, 290)">
-          <rect x="0" y="0" width="12" height="12" fill={highlightColor} rx="2" />
-          <text x="18" y="10" fill="#1a2744" fontSize="10">
-            メインエリア
-          </text>
+          {/* 凡例 */}
+          <g transform="translate(20, 290)">
+            <rect x="0" y="0" width="12" height="12" fill={highlightColor} rx="2" />
+            <text x="18" y="10" fill="#1a2744" fontSize="10">
+              メインエリア
+            </text>
 
-          <rect x="90" y="0" width="12" height="12" fill="#4a6a93" rx="2" />
-          <text x="108" y="10" fill="#1a2744" fontSize="10">
-            対応エリア
-          </text>
+            <rect x="90" y="0" width="12" height="12" fill="#4a6a93" rx="2" />
+            <text x="108" y="10" fill="#1a2744" fontSize="10">
+              対応エリア
+            </text>
 
-          <circle cx="186" cy="6" r="5" fill="#f39c12" stroke="#fff" strokeWidth="1" />
-          <text x="196" y="10" fill="#1a2744" fontSize="10">
-            本社
-          </text>
-        </g>
-      </svg>
+            <circle cx="186" cy="6" r="5" fill="#f39c12" stroke="#fff" strokeWidth="1" />
+            <text x="196" y="10" fill="#1a2744" fontSize="10">
+              本社
+            </text>
+          </g>
+        </svg>
 
-      {/* ツールチップ */}
-      {hoveredArea && (
-        <motion.div
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-          className="absolute pointer-events-none bg-white shadow-lg rounded-lg px-3 py-2 text-sm z-10"
-          style={{
-            left: tooltipPosition.x,
-            top: tooltipPosition.y,
-            transform: "translate(-50%, -100%)",
-          }}
-        >
-          <p className="font-bold text-primary">{hoveredArea}</p>
-          {getRegionInfo(hoveredArea) && (
-            <p className="text-text-muted text-xs">
-              施工実績{" "}
-              <span className="text-accent font-semibold">
-                {getRegionInfo(hoveredArea)?.worksCount}件
-              </span>
-              以上
-            </p>
-          )}
-        </motion.div>
-      )}
-    </div>
+        {/* ツールチップ */}
+        {hoveredArea && (
+          <div
+            className="absolute pointer-events-none bg-white shadow-lg rounded-lg px-3 py-2 text-sm z-10 transition-opacity duration-200"
+            style={{
+              left: tooltipPosition.x,
+              top: tooltipPosition.y,
+              transform: "translate(-50%, -100%)",
+            }}
+          >
+            <p className="font-bold text-primary">{hoveredArea}</p>
+            {getRegionInfo(hoveredArea) && (
+              <p className="text-text-muted text-xs">
+                施工実績{" "}
+                <span className="text-accent font-semibold">
+                  {getRegionInfo(hoveredArea)?.worksCount}件
+                </span>
+                以上
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    </FadeInUp>
   );
 }

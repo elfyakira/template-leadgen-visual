@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import FadeInUp from "./animations/FadeInUp";
+import StaggerContainer from "./animations/StaggerContainer";
 
 export interface WorkItem {
   slug: string;
@@ -34,14 +35,9 @@ export default function WorksGrid({
 
   return (
     <div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-        {items.map((item, index) => (
-          <motion.div
-            key={item.slug}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.05 }}
-          >
+      <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        {items.map((item) => (
+          <FadeInUp key={item.slug}>
             <Link
               href={`/works/${item.slug}`}
               className="block group"
@@ -71,9 +67,9 @@ export default function WorksGrid({
                 )}
               </div>
             </Link>
-          </motion.div>
+          </FadeInUp>
         ))}
-      </div>
+      </StaggerContainer>
 
       {showLoadMore && onLoadMore && (
         <div className="text-center mt-10">

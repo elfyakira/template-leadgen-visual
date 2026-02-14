@@ -1,11 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import { Check, ArrowRight } from "lucide-react";
+import FadeInUp from "./animations/FadeInUp";
+import FadeInImage from "./animations/FadeInImage";
 
 interface ServiceCardProps {
   number: string;
@@ -26,40 +24,27 @@ export default function ServiceCard({
   href,
   reverse = false,
 }: ServiceCardProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
     <div
-      ref={ref}
       className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center ${
         reverse ? "md:flex-row-reverse" : ""
       }`}
     >
       {/* 画像 */}
-      <motion.div
-        initial={{ opacity: 0, x: reverse ? 50 : -50 }}
-        animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.6 }}
-        className={reverse ? "md:order-2" : ""}
-      >
-        <div className="relative aspect-[3/2] rounded-lg overflow-hidden shadow-lg group">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
-      </motion.div>
+      <div className={reverse ? "md:order-2" : ""}>
+        <FadeInImage
+          src={image}
+          alt={title}
+          width={600}
+          height={400}
+          direction={reverse ? "right" : "left"}
+          containerClassName="relative aspect-[3/2] rounded-lg overflow-hidden shadow-lg"
+          className="object-cover w-full h-full"
+        />
+      </div>
 
       {/* テキスト */}
-      <motion.div
-        initial={{ opacity: 0, x: reverse ? -50 : 50 }}
-        animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className={reverse ? "md:order-1" : ""}
-      >
+      <FadeInUp delay={200} className={reverse ? "md:order-1" : ""}>
         <div className="relative">
           {/* 番号（装飾） */}
           <span className="absolute -top-4 -left-2 md:-left-4 text-7xl md:text-8xl font-bold text-gray-100 select-none pointer-events-none">
@@ -96,7 +81,7 @@ export default function ServiceCard({
             )}
           </div>
         </div>
-      </motion.div>
+      </FadeInUp>
     </div>
   );
 }

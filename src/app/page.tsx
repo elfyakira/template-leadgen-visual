@@ -2,10 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import { MapPin, ArrowRight } from "lucide-react";
+import { FadeInUp, StaggerContainer } from "@/components/animations";
 import HeroVisual from "@/components/HeroVisual";
 import CTASection from "@/components/CTASection";
 import PhoneButton from "@/components/PhoneButton";
@@ -21,35 +19,21 @@ import {
 
 // セクション2: サービス概要
 function ServicesSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
-
   return (
-    <section ref={ref} className="section-padding bg-white">
+    <section className="section-padding bg-white">
       <div className="max-w-container mx-auto px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12 md:mb-16"
-        >
+        <FadeInUp className="text-center mb-12 md:mb-16">
           <h2 className="text-2xl md:text-4xl font-bold text-primary mb-3">
             私たちができること
           </h2>
           <p className="text-text-muted">
             住まいのお悩み、何でもご相談ください
           </p>
-        </motion.div>
+        </FadeInUp>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <motion.div
-              key={service.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group"
-            >
+        <StaggerContainer className="grid md:grid-cols-3 gap-8">
+          {services.map((service) => (
+            <div key={service.id} className="group">
               <Link href={`/service#${service.id}`} className="block">
                 <div className="relative aspect-[4/3] mb-6 rounded-card overflow-hidden">
                   <Image
@@ -67,9 +51,9 @@ function ServicesSection() {
                 </p>
                 <span className="text-link">詳しく見る</span>
               </Link>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );
@@ -77,9 +61,6 @@ function ServicesSection() {
 
 // セクション3: 施工事例ハイライト
 function WorksSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
-
   // ダミーの施工事例データ
   const worksData = [
     { slug: "okazaki-gaiheki-001", title: "外壁塗装", area: "岡崎市", image: "/images/works/work-01.jpg" },
@@ -91,31 +72,20 @@ function WorksSection() {
   ];
 
   return (
-    <section ref={ref} className="section-padding bg-background-alt">
+    <section className="section-padding bg-background-alt">
       <div className="max-w-container mx-auto px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12 md:mb-16"
-        >
+        <FadeInUp className="text-center mb-12 md:mb-16">
           <h2 className="text-2xl md:text-4xl font-bold text-primary mb-3">
             施工事例
           </h2>
           <p className="text-text-muted">
             地域のお客様から選ばれ続けています
           </p>
-        </motion.div>
+        </FadeInUp>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-12">
-          {worksData.map((work, index) => (
-            <motion.div
-              key={work.slug}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="group"
-            >
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-12" staggerDelay={50}>
+          {worksData.map((work) => (
+            <div key={work.slug} className="group">
               <Link href={`/works/${work.slug}`} className="block">
                 <div className="relative aspect-square rounded-card overflow-hidden">
                   <Image
@@ -137,21 +107,16 @@ function WorksSection() {
                   {work.title}
                 </p>
               </Link>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </StaggerContainer>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-center"
-        >
+        <FadeInUp delay={300} className="text-center">
           <Link href="/works" className="btn-secondary inline-flex items-center gap-2">
             施工事例をもっと見る
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </motion.div>
+        </FadeInUp>
       </div>
     </section>
   );
@@ -159,34 +124,21 @@ function WorksSection() {
 
 // セクション4: 選ばれる理由
 function ReasonsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
-
   return (
-    <section ref={ref} className="section-padding bg-white">
+    <section className="section-padding bg-white">
       <div className="max-w-container mx-auto px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12 md:mb-16"
-        >
+        <FadeInUp className="text-center mb-12 md:mb-16">
           <h2 className="text-2xl md:text-4xl font-bold text-primary mb-3">
             選ばれる理由
           </h2>
           <p className="text-text-muted">
             地域のお客様に信頼される3つのポイント
           </p>
-        </motion.div>
+        </FadeInUp>
 
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
           {/* Left: Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="lg:w-2/5"
-          >
+          <FadeInUp className="lg:w-2/5">
             <div className="relative aspect-[4/5] rounded-card overflow-hidden sticky top-24">
               <Image
                 src="/images/craftsman.jpg"
@@ -195,16 +147,13 @@ function ReasonsSection() {
                 className="object-cover"
               />
             </div>
-          </motion.div>
+          </FadeInUp>
 
           {/* Right: Reasons */}
-          <div className="lg:w-3/5 space-y-8">
-            {reasons.map((reason, index) => (
-              <motion.div
+          <StaggerContainer className="lg:w-3/5 space-y-8">
+            {reasons.map((reason) => (
+              <div
                 key={reason.number}
-                initial={{ opacity: 0, x: 30 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="border-b border-gray-200 pb-8 last:border-b-0"
               >
                 <div className="flex items-start gap-6">
@@ -220,9 +169,9 @@ function ReasonsSection() {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </div>
     </section>
@@ -231,34 +180,21 @@ function ReasonsSection() {
 
 // セクション5: 対応エリア概要
 function AreaSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
-
   return (
-    <section ref={ref} className="section-padding bg-background-alt">
+    <section className="section-padding bg-background-alt">
       <div className="max-w-container mx-auto px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12 md:mb-16"
-        >
+        <FadeInUp className="text-center mb-12 md:mb-16">
           <h2 className="text-2xl md:text-4xl font-bold text-primary mb-3">
             対応エリア
           </h2>
           <p className="text-text-muted">
             {localVisual.mainRegion}を中心に、近隣地域もカバーしています
           </p>
-        </motion.div>
+        </FadeInUp>
 
         <div className="flex flex-col lg:flex-row items-center gap-12">
           {/* Map Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="lg:w-1/2"
-          >
+          <FadeInUp className="lg:w-1/2">
             <div className="relative aspect-[4/3] rounded-card overflow-hidden bg-gray-100">
               <Image
                 src={images.areaMap || "/images/area-map.svg"}
@@ -267,15 +203,10 @@ function AreaSection() {
                 className="object-contain p-4"
               />
             </div>
-          </motion.div>
+          </FadeInUp>
 
           {/* Area List */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="lg:w-1/2"
-          >
+          <FadeInUp delay={100} className="lg:w-1/2">
             <div className="flex flex-wrap gap-3 mb-6">
               {localVisual.regions.map((region) => (
                 <span
@@ -309,7 +240,7 @@ function AreaSection() {
             <Link href="/area" className="text-link">
               対応エリアを詳しく見る
             </Link>
-          </motion.div>
+          </FadeInUp>
         </div>
       </div>
     </section>

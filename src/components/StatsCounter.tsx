@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useInView, motion } from "framer-motion";
+import FadeInUp from "./animations/FadeInUp";
 
 interface Stat {
   label: string;
@@ -59,8 +59,26 @@ export default function StatsCounter({
   size = "large",
   color = "white",
 }: StatsCounterProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const sizeClasses = {
     large: {
@@ -105,32 +123,28 @@ export default function StatsCounter({
       className={`flex flex-wrap justify-center items-start ${classes.gap}`}
     >
       {stats.map((stat, index) => (
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-          className="text-center"
-        >
-          <p className={`${classes.label} ${colors.label} mb-2`}>{stat.label}</p>
-          <div className="flex items-baseline justify-center">
-            {stat.prefix && (
-              <span className={`${classes.unit} ${colors.unit} mr-1`}>
-                {stat.prefix}
+        <FadeInUp key={index} delay={index * 100}>
+          <div className="text-center">
+            <p className={`${classes.label} ${colors.label} mb-2`}>{stat.label}</p>
+            <div className="flex items-baseline justify-center">
+              {stat.prefix && (
+                <span className={`${classes.unit} ${colors.unit} mr-1`}>
+                  {stat.prefix}
+                </span>
+              )}
+              <span className={`${classes.number} ${colors.number} font-black`}>
+                <AnimatedNumber
+                  value={stat.value}
+                  duration={duration}
+                  isInView={isInView}
+                />
               </span>
-            )}
-            <span className={`${classes.number} ${colors.number} font-black`}>
-              <AnimatedNumber
-                value={stat.value}
-                duration={duration}
-                isInView={isInView}
-              />
-            </span>
-            <span className={`${classes.unit} ${colors.unit} ml-1 font-medium`}>
-              {stat.unit}
-            </span>
+              <span className={`${classes.unit} ${colors.unit} ml-1 font-medium`}>
+                {stat.unit}
+              </span>
+            </div>
           </div>
-        </motion.div>
+        </FadeInUp>
       ))}
     </div>
   );

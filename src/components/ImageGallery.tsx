@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useState, useCallback, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageGalleryProps {
   images: string[];
@@ -99,75 +98,65 @@ export default function ImageGallery({ images, alt = "施工写真" }: ImageGall
       )}
 
       {/* ライトボックス */}
-      <AnimatePresence>
-        {lightboxOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center transition-opacity duration-200"
+          onClick={closeLightbox}
+        >
+          {/* 閉じるボタン */}
+          <button
             onClick={closeLightbox}
+            className="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
           >
-            {/* 閉じるボタン */}
+            <X className="w-6 h-6 text-white" />
+          </button>
+
+          {/* 前へボタン */}
+          {images.length > 1 && (
             <button
-              onClick={closeLightbox}
-              className="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                goToPrevious();
+              }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
             >
-              <X className="w-6 h-6 text-white" />
+              <ChevronLeft className="w-8 h-8 text-white" />
             </button>
+          )}
 
-            {/* 前へボタン */}
-            {images.length > 1 && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goToPrevious();
-                }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-              >
-                <ChevronLeft className="w-8 h-8 text-white" />
-              </button>
-            )}
+          {/* 画像 */}
+          <div
+            className="relative max-w-[90vw] max-h-[90vh] aspect-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={images[activeIndex]}
+              alt={`${alt} ${activeIndex + 1}`}
+              width={1200}
+              height={800}
+              className="max-w-full max-h-[90vh] object-contain"
+            />
+          </div>
 
-            {/* 画像 */}
-            <motion.div
-              key={activeIndex}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.2 }}
-              className="relative max-w-[90vw] max-h-[90vh] aspect-auto"
-              onClick={(e) => e.stopPropagation()}
+          {/* 次へボタン */}
+          {images.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goToNext();
+              }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
             >
-              <Image
-                src={images[activeIndex]}
-                alt={`${alt} ${activeIndex + 1}`}
-                width={1200}
-                height={800}
-                className="max-w-full max-h-[90vh] object-contain"
-              />
-            </motion.div>
+              <ChevronRight className="w-8 h-8 text-white" />
+            </button>
+          )}
 
-            {/* 次へボタン */}
-            {images.length > 1 && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goToNext();
-                }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-              >
-                <ChevronRight className="w-8 h-8 text-white" />
-              </button>
-            )}
-
-            {/* カウンター */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
-              {activeIndex + 1} / {images.length}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          {/* カウンター */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
+            {activeIndex + 1} / {images.length}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
