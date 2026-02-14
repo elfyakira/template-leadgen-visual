@@ -1,15 +1,12 @@
-import type { Metadata } from "next";
+"use client";
+
 import Image from "next/image";
 import { Phone, MapPin, Car, ParkingCircle } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Timeline from "@/components/Timeline";
 import CTASection from "@/components/CTASection";
+import { FadeInUp, FadeInImage, StaggerContainer } from "@/components/animations";
 import siteData from "../../../data/site.json";
-
-export const metadata: Metadata = {
-  title: `会社概要${siteData.seo.titleSuffix}`,
-  description: `${siteData.company.nameShort}の会社概要。${siteData.localVisual.mainRegion}で創業${siteData.stats.yearsInBusiness}年、地域密着で住まいのお困りごとに対応。代表挨拶、会社情報、沿革をご紹介。`,
-};
 
 export default function AboutPage() {
   const { company, contact, locations, stats, history, certifications, ceo } =
@@ -51,25 +48,27 @@ export default function AboutPage() {
       {/* セクション2: 代表挨拶 */}
       <section className="bg-background-warm py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
-            代表挨拶
-          </h2>
+          <FadeInUp>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
+              代表挨拶
+            </h2>
+          </FadeInUp>
 
           <div className="grid md:grid-cols-5 gap-8 md:gap-12 items-start">
             {/* 代表写真 */}
-            <div className="md:col-span-2 flex justify-center">
+            <FadeInUp className="md:col-span-2 flex justify-center">
               <div className="relative w-64 md:w-full max-w-xs aspect-[3/4] rounded-lg overflow-hidden shadow-lg">
-                <Image
+                <FadeInImage
                   src={ceo.image}
                   alt={`${ceo.title} ${ceo.name}`}
                   fill
                   className="object-cover"
                 />
               </div>
-            </div>
+            </FadeInUp>
 
             {/* 挨拶文 */}
-            <div className="md:col-span-3">
+            <FadeInUp delay={100} className="md:col-span-3">
               <p className="text-xl md:text-2xl font-bold text-primary leading-relaxed mb-8">
                 {ceo.greeting.catchphrase}
               </p>
@@ -83,7 +82,7 @@ export default function AboutPage() {
               <p className="mt-8 text-right text-lg font-semibold text-primary">
                 {ceo.title} {ceo.name}
               </p>
-            </div>
+            </FadeInUp>
           </div>
         </div>
       </section>
@@ -92,39 +91,43 @@ export default function AboutPage() {
       <section className="bg-white py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-6 text-center">
           {/* 経営理念 */}
-          <div className="mb-12">
+          <FadeInUp className="mb-12">
             <h2 className="text-lg font-semibold text-text-muted mb-4">
               経営理念
             </h2>
             <p className="text-2xl md:text-3xl font-bold text-primary leading-relaxed">
               {company.mission}
             </p>
-          </div>
+          </FadeInUp>
 
           {/* 区切り線 */}
-          <div className="w-24 h-px bg-gray-300 mx-auto mb-12" />
+          <FadeInUp delay={100}>
+            <div className="w-24 h-px bg-gray-300 mx-auto mb-12" />
+          </FadeInUp>
 
           {/* ビジョン */}
-          <div>
+          <FadeInUp delay={200}>
             <h2 className="text-lg font-semibold text-text-muted mb-4">
               ビジョン
             </h2>
             <p className="text-xl md:text-2xl font-semibold text-text-muted leading-relaxed">
               {company.vision}
             </p>
-          </div>
+          </FadeInUp>
         </div>
       </section>
 
       {/* セクション4: 会社情報 */}
       <section className="bg-background-alt py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
-            会社情報
-          </h2>
+          <FadeInUp>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
+              会社情報
+            </h2>
+          </FadeInUp>
 
           {/* PC: テーブル形式 */}
-          <div className="hidden md:block bg-white rounded-lg overflow-hidden shadow-sm">
+          <FadeInUp delay={100} className="hidden md:block bg-white rounded-lg overflow-hidden shadow-sm">
             <table className="w-full">
               <tbody>
                 {companyInfo.map((item, index) => (
@@ -151,10 +154,10 @@ export default function AboutPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </FadeInUp>
 
           {/* SP: カード形式 */}
-          <div className="md:hidden space-y-4">
+          <StaggerContainer className="md:hidden space-y-4">
             {companyInfo.map((item, index) => (
               <div key={index} className="bg-white rounded-lg p-4 shadow-sm">
                 <p className="text-sm font-semibold text-primary mb-1">
@@ -172,28 +175,34 @@ export default function AboutPage() {
                 )}
               </div>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* セクション5: 沿革 */}
       <section className="bg-white py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
-            沿革
-          </h2>
-          <Timeline items={history} />
+          <FadeInUp>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
+              沿革
+            </h2>
+          </FadeInUp>
+          <FadeInUp delay={100}>
+            <Timeline items={history} />
+          </FadeInUp>
         </div>
       </section>
 
       {/* セクション6: 資格・認定 */}
       <section className="bg-background-alt py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
-            資格・認定
-          </h2>
+          <FadeInUp>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
+              資格・認定
+            </h2>
+          </FadeInUp>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {certifications.map((cert, index) => (
               <div
                 key={index}
@@ -214,20 +223,22 @@ export default function AboutPage() {
                 )}
               </div>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* セクション7: アクセス */}
       <section className="bg-white py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
-            アクセス
-          </h2>
+          <FadeInUp>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
+              アクセス
+            </h2>
+          </FadeInUp>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Google Map */}
-            <div className="aspect-video md:aspect-square rounded-lg overflow-hidden shadow-lg">
+            <FadeInUp className="aspect-video md:aspect-square rounded-lg overflow-hidden shadow-lg">
               <iframe
                 src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d${locations.headquarters.lng}!3d${locations.headquarters.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzTCsDU3JzA0LjciTiAxMzfCsDA5JzQ0LjAiRQ!5e0!3m2!1sja!2sjp!4v1234567890`}
                 width="100%"
@@ -238,10 +249,10 @@ export default function AboutPage() {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="会社所在地"
               />
-            </div>
+            </FadeInUp>
 
             {/* アクセス情報 */}
-            <div className="flex flex-col justify-center">
+            <FadeInUp delay={100} className="flex flex-col justify-center">
               <h3 className="text-xl font-bold text-primary mb-4">
                 {company.name}
               </h3>
@@ -291,7 +302,7 @@ export default function AboutPage() {
               >
                 Google Mapで見る
               </a>
-            </div>
+            </FadeInUp>
           </div>
         </div>
       </section>

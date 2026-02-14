@@ -1,14 +1,11 @@
-import type { Metadata } from "next";
+"use client";
+
 import { Phone, Mail, Check, ChevronDown } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import ContactForm from "@/components/ContactForm";
 import Accordion from "@/components/Accordion";
+import { FadeInUp, StaggerContainer } from "@/components/animations";
 import siteData from "../../../data/site.json";
-
-export const metadata: Metadata = {
-  title: `お問い合わせ・無料見積もり${siteData.seo.titleSuffix}`,
-  description: `${siteData.company.nameShort}へのお問い合わせ・無料見積もりのご依頼はこちら。お電話またはフォームからお気軽にどうぞ。${siteData.localVisual.mainRegion}エリアで外壁塗装・リフォームなら当社へ。`,
-};
 
 export default function ContactPage() {
   const { company, contact, locations, faq } = siteData;
@@ -27,7 +24,7 @@ export default function ContactPage() {
         <div className="max-w-5xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-6 md:gap-12">
             {/* 電話エリア */}
-            <div className="border border-gray-200 rounded-lg p-8 hover:bg-gray-50 transition-colors">
+            <FadeInUp className="border border-gray-200 rounded-lg p-8 hover:bg-gray-50 transition-colors">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <Phone className="w-6 h-6 text-primary" />
@@ -45,10 +42,10 @@ export default function ContactPage() {
               <p className="text-text-muted">
                 受付時間: {contact.hours}
               </p>
-            </div>
+            </FadeInUp>
 
             {/* フォームエリア */}
-            <div className="border border-gray-200 rounded-lg p-8 hover:bg-gray-50 transition-colors">
+            <FadeInUp delay={100} className="border border-gray-200 rounded-lg p-8 hover:bg-gray-50 transition-colors">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <Mail className="w-6 h-6 text-primary" />
@@ -67,7 +64,7 @@ export default function ContactPage() {
                 フォームへスクロール
                 <ChevronDown className="w-5 h-5" />
               </a>
-            </div>
+            </FadeInUp>
           </div>
         </div>
       </section>
@@ -75,18 +72,20 @@ export default function ContactPage() {
       {/* セクション3: お問い合わせフォーム */}
       <section id="contact-form" className="bg-background-alt py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
-            お問い合わせフォーム
-          </h2>
+          <FadeInUp>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
+              お問い合わせフォーム
+            </h2>
+          </FadeInUp>
 
           <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
             {/* フォーム（左 2/3） */}
-            <div className="lg:col-span-2 bg-white rounded-lg p-6 md:p-8">
+            <FadeInUp delay={100} className="lg:col-span-2 bg-white rounded-lg p-6 md:p-8">
               <ContactForm />
-            </div>
+            </FadeInUp>
 
             {/* 補足情報（右 1/3） */}
-            <div className="space-y-6">
+            <StaggerContainer className="space-y-6">
               {/* このフォームについて */}
               <div className="bg-white rounded-lg p-6">
                 <h3 className="font-semibold text-primary mb-4">
@@ -126,7 +125,7 @@ export default function ContactPage() {
                   {contact.phoneFormatted}
                 </a>
               </div>
-            </div>
+            </StaggerContainer>
           </div>
         </div>
       </section>
@@ -134,20 +133,26 @@ export default function ContactPage() {
       {/* セクション4: よくあるご質問 */}
       <section className="bg-white py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
-            よくあるご質問
-          </h2>
-          <Accordion items={faq} />
+          <FadeInUp>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
+              よくあるご質問
+            </h2>
+          </FadeInUp>
+          <FadeInUp delay={100}>
+            <Accordion items={faq} />
+          </FadeInUp>
         </div>
       </section>
 
       {/* セクション5: 会社情報 */}
       <section className="bg-primary py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-xl md:text-2xl font-bold text-white mb-6">
-            {company.name}
-          </h2>
-          <div className="text-white/80 space-y-2">
+          <FadeInUp>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-6">
+              {company.name}
+            </h2>
+          </FadeInUp>
+          <FadeInUp delay={100} className="text-white/80 space-y-2">
             <p>
               〒{locations.headquarters.zipCode}{" "}
               {locations.headquarters.fullAddress}
@@ -163,7 +168,7 @@ export default function ContactPage() {
               / FAX: {contact.fax}
             </p>
             <p>営業時間: {contact.hours}</p>
-          </div>
+          </FadeInUp>
         </div>
       </section>
     </main>

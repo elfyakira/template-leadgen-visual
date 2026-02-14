@@ -10,6 +10,7 @@ interface FadeInUpProps {
   className?: string;
   style?: React.CSSProperties;
   as?: ElementType;
+  id?: string;
 }
 
 // スクロール位置が0になるまで待ち、さらに少し待機
@@ -35,6 +36,7 @@ export default function FadeInUp({
   className = '',
   style: externalStyle,
   as: Component = 'div',
+  id,
 }: FadeInUpProps) {
   const ref = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -98,6 +100,7 @@ export default function FadeInUp({
       ref={ref as React.RefObject<HTMLDivElement>}
       className={className}
       style={mergedStyle}
+      id={id}
     >
       {children}
     </Component>

@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
 import {
   Phone,
@@ -18,12 +19,8 @@ import {
 import PageHeader from "@/components/PageHeader";
 import ServiceCard from "@/components/ServiceCard";
 import CTASection from "@/components/CTASection";
+import { FadeInUp, StaggerContainer } from "@/components/animations";
 import siteData from "../../../data/site.json";
-
-export const metadata: Metadata = {
-  title: `外壁塗装・屋根工事・リフォームサービス${siteData.seo.titleSuffix}`,
-  description: `${siteData.company.nameShort}のサービス一覧。外壁塗装・屋根工事・リフォームなど、住まいのお困りごとに幅広く対応。${siteData.localVisual.mainRegion}を中心に地域密着で施工。無料見積もりはお気軽にどうぞ。`,
-};
 
 const additionalServiceIcons: { [key: string]: React.ReactNode } = {
   droplet: <Droplet className="w-8 h-8" />,
@@ -80,21 +77,20 @@ export default function ServicePage() {
       {/* セクション3: 対応可能な工事一覧 */}
       <section className="bg-background-alt py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
+          <FadeInUp className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-bold text-primary mb-3">
               その他対応可能な工事
             </h2>
             <p className="text-text-muted">
               以下の工事もお気軽にご相談ください
             </p>
-          </div>
+          </FadeInUp>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10">
-            {additionalServices.map((service, index) => (
+          <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10">
+            {additionalServices.map((service) => (
               <div
                 key={service.id}
                 className="bg-white rounded-lg p-6 text-center shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
-                style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <div className="w-12 h-12 mx-auto mb-3 text-primary">
                   {additionalServiceIcons[service.icon] || (
@@ -104,33 +100,33 @@ export default function ServicePage() {
                 <p className="font-semibold text-primary">{service.title}</p>
               </div>
             ))}
-          </div>
+          </StaggerContainer>
 
-          <div className="text-center">
+          <FadeInUp delay={200} className="text-center">
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold px-8 py-4 rounded-lg transition-colors"
             >
               対応工事について相談する
             </Link>
-          </div>
+          </FadeInUp>
         </div>
       </section>
 
       {/* セクション4: 料金目安 */}
       <section className="bg-white py-16 md:py-20">
         <div className="max-w-3xl mx-auto px-6">
-          <div className="text-center mb-12">
+          <FadeInUp className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-bold text-primary mb-3">
               料金目安
             </h2>
             <p className="text-text-muted">
               ※正式なお見積もりは現地調査後にご提示いたします
             </p>
-          </div>
+          </FadeInUp>
 
           {/* PC: テーブル形式 */}
-          <div className="hidden md:block overflow-hidden rounded-lg shadow-sm mb-8">
+          <FadeInUp delay={100} className="hidden md:block overflow-hidden rounded-lg shadow-sm mb-8">
             <table className="w-full">
               <thead>
                 <tr className="bg-primary text-white">
@@ -160,10 +156,10 @@ export default function ServicePage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </FadeInUp>
 
           {/* SP: カード形式 */}
-          <div className="md:hidden space-y-4 mb-8">
+          <StaggerContainer className="md:hidden space-y-4 mb-8">
             {pricing.map((item, index) => (
               <div key={index} className="bg-gray-50 rounded-lg p-4">
                 <p className="font-semibold text-primary mb-2">{item.service}</p>
@@ -173,10 +169,10 @@ export default function ServicePage() {
                 <p className="text-sm text-text-muted">{item.note}</p>
               </div>
             ))}
-          </div>
+          </StaggerContainer>
 
           {/* 注意書き */}
-          <div className="bg-gray-50 rounded-lg p-6 mb-8">
+          <FadeInUp className="bg-gray-50 rounded-lg p-6 mb-8">
             <ul className="space-y-2 text-sm text-text-muted">
               <li>
                 ※上記は概算の目安です。建物の状態、使用する材料、工事範囲により大きく変動します。
@@ -186,33 +182,33 @@ export default function ServicePage() {
                 ※正確な金額は現地調査後にお見積書にてご提示いたします。
               </li>
             </ul>
-          </div>
+          </FadeInUp>
 
-          <div className="text-center">
+          <FadeInUp delay={100} className="text-center">
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white font-bold text-lg px-10 py-4 rounded-lg transition-colors"
             >
               無料見積もりを依頼する
             </Link>
-          </div>
+          </FadeInUp>
         </div>
       </section>
 
       {/* セクション5: ご依頼の流れ */}
       <section className="bg-background-alt py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12">
+          <FadeInUp className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-bold text-primary mb-3">
               ご依頼の流れ
             </h2>
             <p className="text-text-muted">
               お問い合わせからアフターフォローまで、安心のサポート体制
             </p>
-          </div>
+          </FadeInUp>
 
           {/* PC: 横並び */}
-          <div className="hidden md:flex items-start justify-between">
+          <FadeInUp delay={100} className="hidden md:flex items-start justify-between">
             {process.map((step, index) => (
               <div key={step.step} className="flex items-start">
                 <div className="text-center w-40">
@@ -258,10 +254,10 @@ export default function ServicePage() {
                 )}
               </div>
             ))}
-          </div>
+          </FadeInUp>
 
           {/* SP: 縦並び */}
-          <div className="md:hidden space-y-6">
+          <StaggerContainer className="md:hidden space-y-6">
             {process.map((step, index) => (
               <div key={step.step} className="relative">
                 {/* 縦ライン */}
@@ -303,7 +299,7 @@ export default function ServicePage() {
                 </div>
               </div>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 

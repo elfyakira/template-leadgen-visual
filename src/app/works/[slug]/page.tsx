@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import BeforeAfter from "@/components/BeforeAfter";
 import ImageGallery from "@/components/ImageGallery";
 import CTASection from "@/components/CTASection";
+import { FadeInUp, FadeInImage, StaggerContainer } from "@/components/animations";
 import siteData from "../../../../data/site.json";
 
 // サンプルデータ（実際の運用ではsite.jsonまたはCMSから取得）
@@ -235,25 +236,31 @@ export default async function WorkDetailPage({
       {/* セクション1: ビフォーアフター */}
       <section className="bg-white py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-primary text-center mb-8">
-            {work.title}
-          </h1>
-          <BeforeAfter
-            beforeImage={work.beforeImage}
-            afterImage={work.afterImage}
-          />
+          <FadeInUp>
+            <h1 className="text-2xl md:text-3xl font-bold text-primary text-center mb-8">
+              {work.title}
+            </h1>
+          </FadeInUp>
+          <FadeInUp delay={100}>
+            <BeforeAfter
+              beforeImage={work.beforeImage}
+              afterImage={work.afterImage}
+            />
+          </FadeInUp>
         </div>
       </section>
 
       {/* セクション2: 工事概要 */}
       <section className="bg-background-alt py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
-            工事概要
-          </h2>
+          <FadeInUp>
+            <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
+              工事概要
+            </h2>
+          </FadeInUp>
 
           {/* PC: テーブル形式 */}
-          <div className="hidden md:block bg-white rounded-lg overflow-hidden shadow-sm">
+          <FadeInUp delay={100} className="hidden md:block bg-white rounded-lg overflow-hidden shadow-sm">
             <table className="w-full">
               <tbody>
                 {workInfo.map((item, index) => (
@@ -273,10 +280,10 @@ export default async function WorkDetailPage({
                 ))}
               </tbody>
             </table>
-          </div>
+          </FadeInUp>
 
           {/* SP: カード形式 */}
-          <div className="md:hidden space-y-3">
+          <StaggerContainer className="md:hidden space-y-3">
             {workInfo.map((item, index) => (
               <div key={index} className="bg-white rounded-lg p-4 shadow-sm">
                 <p className="text-sm font-semibold text-primary mb-1">
@@ -285,7 +292,7 @@ export default async function WorkDetailPage({
                 <p className="text-text">{item.value}</p>
               </div>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -293,10 +300,14 @@ export default async function WorkDetailPage({
       {work.galleryImages.length > 0 && (
         <section className="bg-white py-12 md:py-16">
           <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
-              施工写真
-            </h2>
-            <ImageGallery images={work.galleryImages} alt={work.title} />
+            <FadeInUp>
+              <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
+                施工写真
+              </h2>
+            </FadeInUp>
+            <FadeInUp delay={100}>
+              <ImageGallery images={work.galleryImages} alt={work.title} />
+            </FadeInUp>
           </div>
         </section>
       )}
@@ -305,10 +316,12 @@ export default async function WorkDetailPage({
       {work.customerVoice && (
         <section className="bg-background-alt py-12 md:py-16">
           <div className="max-w-3xl mx-auto px-6">
-            <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
-              お客様の声
-            </h2>
-            <div className="bg-white rounded-lg p-8 shadow-sm">
+            <FadeInUp>
+              <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
+                お客様の声
+              </h2>
+            </FadeInUp>
+            <FadeInUp delay={100} className="bg-white rounded-lg p-8 shadow-sm">
               <div className="relative">
                 <span className="absolute -top-4 -left-2 text-6xl text-primary/20 font-serif">
                   "
@@ -320,7 +333,7 @@ export default async function WorkDetailPage({
               <p className="text-right text-text-muted mt-6">
                 {work.customerInfo}
               </p>
-            </div>
+            </FadeInUp>
           </div>
         </section>
       )}
@@ -329,14 +342,16 @@ export default async function WorkDetailPage({
       {work.staffComment && (
         <section className="bg-white py-12 md:py-16">
           <div className="max-w-3xl mx-auto px-6">
-            <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
-              担当者より
-            </h2>
-            <div className="flex gap-6 items-start">
+            <FadeInUp>
+              <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
+                担当者より
+              </h2>
+            </FadeInUp>
+            <FadeInUp delay={100} className="flex gap-6 items-start">
               {/* 担当者写真 */}
               <div className="flex-shrink-0">
                 <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-primary">
-                  <Image
+                  <FadeInImage
                     src={work.staffImage || "/images/staff/default.jpg"}
                     alt={work.staffName || "担当者"}
                     width={80}
@@ -356,7 +371,7 @@ export default async function WorkDetailPage({
                 </div>
                 <p className="text-text leading-relaxed">{work.staffComment}</p>
               </div>
-            </div>
+            </FadeInUp>
           </div>
         </section>
       )}
@@ -365,10 +380,12 @@ export default async function WorkDetailPage({
       {relatedWorks.length > 0 && (
         <section className="bg-background-alt py-12 md:py-16">
           <div className="max-w-5xl mx-auto px-6">
-            <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
-              関連する施工事例
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            <FadeInUp>
+              <h2 className="text-xl md:text-2xl font-bold text-primary text-center mb-8">
+                関連する施工事例
+              </h2>
+            </FadeInUp>
+            <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {relatedWorks.map((relatedWork) => (
                 <Link
                   key={relatedWork.slug}
@@ -391,8 +408,8 @@ export default async function WorkDetailPage({
                   </p>
                 </Link>
               ))}
-            </div>
-            <div className="text-center mt-8">
+            </StaggerContainer>
+            <FadeInUp delay={200} className="text-center mt-8">
               <Link
                 href="/works"
                 className="inline-flex items-center gap-2 text-primary font-semibold hover:text-accent transition-colors"
@@ -400,7 +417,7 @@ export default async function WorkDetailPage({
                 施工事例一覧へ戻る
                 <ArrowRight className="w-4 h-4" />
               </Link>
-            </div>
+            </FadeInUp>
           </div>
         </section>
       )}

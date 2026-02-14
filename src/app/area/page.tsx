@@ -1,15 +1,12 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
 import { Phone, MapPin, Car, ParkingCircle, ArrowRight } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import CTASection from "@/components/CTASection";
 import AreaMap from "@/components/AreaMap";
+import { FadeInUp, StaggerContainer } from "@/components/animations";
 import siteData from "../../../data/site.json";
-
-export const metadata: Metadata = {
-  title: `対応エリア${siteData.seo.titleSuffix}`,
-  description: `${siteData.company.nameShort}の対応エリア一覧。${siteData.localVisual.mainRegion}を中心に、周辺地域もカバー。地域密着だからこそスピーディーな対応が可能。対応エリア外でもまずはご相談ください。`,
-};
 
 export default function AreaPage() {
   const { company, contact, locations, localVisual } = siteData;
@@ -31,15 +28,19 @@ export default function AreaPage() {
       <section className="bg-white py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-6 text-center">
           {/* インタラクティブ地図 */}
-          <AreaMap
-            regions={localVisual.regions}
-            mainArea={localVisual.mainRegion}
-            scrollToAreaOnClick={true}
-            className="mb-8"
-          />
+          <FadeInUp>
+            <AreaMap
+              regions={localVisual.regions}
+              mainArea={localVisual.mainRegion}
+              scrollToAreaOnClick={true}
+              className="mb-8"
+            />
+          </FadeInUp>
 
-          <p className="text-text-muted">{localVisual.areaNote}</p>
-          <p className="text-text-muted mt-2">{localVisual.areaOutsideNote}</p>
+          <FadeInUp delay={100}>
+            <p className="text-text-muted">{localVisual.areaNote}</p>
+            <p className="text-text-muted mt-2">{localVisual.areaOutsideNote}</p>
+          </FadeInUp>
         </div>
       </section>
 
@@ -48,7 +49,7 @@ export default function AreaPage() {
         <div className="max-w-5xl mx-auto px-6">
           {/* メイン対応エリア */}
           {mainRegion && (
-            <div className="mb-12" id={`area-${mainRegion.name}`}>
+            <FadeInUp className="mb-12" id={`area-${mainRegion.name}`}>
               <h2 className="text-lg font-semibold text-accent mb-4">
                 メイン対応エリア
               </h2>
@@ -80,78 +81,82 @@ export default function AreaPage() {
                   </Link>
                 </div>
               </div>
-            </div>
+            </FadeInUp>
           )}
 
           {/* 周辺対応エリア */}
-          <div>
+          <FadeInUp delay={100}>
             <h2 className="text-lg font-semibold text-text-muted mb-4">
               周辺対応エリア
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {subRegions.map((region) => (
-                <div
-                  key={region.name}
-                  id={`area-${region.name}`}
-                  className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow"
+          </FadeInUp>
+          <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {subRegions.map((region) => (
+              <div
+                key={region.name}
+                id={`area-${region.name}`}
+                className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <h3 className="text-xl font-bold text-primary mb-2">
+                  {region.name}
+                </h3>
+                <p className="text-sm mb-3">
+                  施工実績{" "}
+                  <span className="text-accent font-semibold">
+                    {region.worksCount}件
+                  </span>
+                  以上
+                </p>
+                <Link
+                  href={`/works?area=${region.name}`}
+                  className="inline-flex items-center gap-1 text-sm text-primary hover:text-accent transition-colors"
                 >
-                  <h3 className="text-xl font-bold text-primary mb-2">
-                    {region.name}
-                  </h3>
-                  <p className="text-sm mb-3">
-                    施工実績{" "}
-                    <span className="text-accent font-semibold">
-                      {region.worksCount}件
-                    </span>
-                    以上
-                  </p>
-                  <Link
-                    href={`/works?area=${region.name}`}
-                    className="inline-flex items-center gap-1 text-sm text-primary hover:text-accent transition-colors"
-                  >
-                    施工事例を見る
-                    <ArrowRight className="w-3 h-3" />
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
+                  施工事例を見る
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
       {/* セクション4: 対応エリア外について */}
       <section className="bg-white py-12 md:py-16">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">
-            上記以外の地域にお住まいの方へ
-          </h2>
-          <p className="text-text-muted leading-relaxed mb-6">
-            リストに記載のない地域でも、対応可能な場合がございます。
-            <br className="hidden md:block" />
-            遠方の場合は出張費がかかる場合がありますが、まずはお気軽にご相談ください。
-            <br className="hidden md:block" />
-            お電話またはお問い合わせフォームから、ご住所をお知らせいただければ、対応可否をすぐにお伝えします。
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 text-primary font-semibold hover:text-accent transition-colors"
-          >
-            エリア外でも相談してみる
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <FadeInUp>
+            <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">
+              上記以外の地域にお住まいの方へ
+            </h2>
+            <p className="text-text-muted leading-relaxed mb-6">
+              リストに記載のない地域でも、対応可能な場合がございます。
+              <br className="hidden md:block" />
+              遠方の場合は出張費がかかる場合がありますが、まずはお気軽にご相談ください。
+              <br className="hidden md:block" />
+              お電話またはお問い合わせフォームから、ご住所をお知らせいただければ、対応可否をすぐにお伝えします。
+            </p>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 text-primary font-semibold hover:text-accent transition-colors"
+            >
+              エリア外でも相談してみる
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </FadeInUp>
         </div>
       </section>
 
       {/* セクション5: 会社所在地 */}
       <section className="bg-background-alt py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
-            会社所在地
-          </h2>
+          <FadeInUp>
+            <h2 className="text-2xl md:text-3xl font-bold text-primary text-center mb-12">
+              会社所在地
+            </h2>
+          </FadeInUp>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Google Map */}
-            <div className="aspect-video md:aspect-square rounded-lg overflow-hidden shadow-lg">
+            <FadeInUp className="aspect-video md:aspect-square rounded-lg overflow-hidden shadow-lg">
               <iframe
                 src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d${locations.headquarters.lng}!3d${locations.headquarters.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzTCsDU3JzA0LjciTiAxMzfCsDA5JzQ0LjAiRQ!5e0!3m2!1sja!2sjp!4v1234567890`}
                 width="100%"
@@ -162,10 +167,10 @@ export default function AreaPage() {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="会社所在地"
               />
-            </div>
+            </FadeInUp>
 
             {/* アクセス情報 */}
-            <div className="flex flex-col justify-center">
+            <FadeInUp delay={100} className="flex flex-col justify-center">
               <h3 className="text-xl font-bold text-primary mb-4">
                 {company.name}
               </h3>
@@ -215,7 +220,7 @@ export default function AreaPage() {
               >
                 Google Mapで見る
               </a>
-            </div>
+            </FadeInUp>
           </div>
         </div>
       </section>
